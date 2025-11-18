@@ -77,6 +77,19 @@ const RETRY_DELAY_BASE = 1000 // 1 second base delay
 const CACHE_DURATION_DAYS = 7 // Cache validation results for 7 days
 const CACHE_FILE = path.join(process.cwd(), '.test-cache', 'link-validation.json')
 
+// Transient error patterns that should NOT be cached long-term
+const TRANSIENT_ERROR_PATTERNS = [
+  'abort',
+  'ENOTFOUND',     // DNS lookup failed
+  'ETIMEDOUT',     // Network timeout
+  'ECONNREFUSED',  // Connection refused
+  'ENETUNREACH',   // Network unreachable
+  'ECONNRESET',    // Connection reset
+  'fetch failed',  // Generic fetch failure
+  'socket hang up',
+  'network timeout',
+]
+
 // Domains that often block automated requests or have strict rate limits
 const EXCLUDED_DOMAINS = [
   'linkedin.com',
@@ -197,6 +210,15 @@ describe('External Links Validation', () => {
     } catch {
       return false
     }
+  }
+
+  /**
+   * Check if an error is transient (should not be cached long-term)
+   */
+  function isTransientError(errorMessage: string): boolean {
+    return TRANSIENT_ERROR_PATTERNS.some((pattern) =>
+      errorMessage.toLowerCase().includes(pattern.toLowerCase()),
+    )
   }
 
   /**
@@ -370,15 +392,25 @@ describe('External Links Validation', () => {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error'
         lastError = errorMessage
 
-        // If it's the last attempt or a permanent error, return failure
-        if (attempt === MAX_RETRIES || errorMessage.includes('abort')) {
+        // If it's the last attempt, return failure
+        if (attempt === MAX_RETRIES) {
           const result: ValidationResult = {
             ...baseResult,
             success: false,
             error: errorMessage,
           }
-          linkCache.set(url, result)
-          cacheResult(url, result, persistentCache)
+
+          // Only cache if NOT a transient network error
+          const isTransient = isTransientError(errorMessage)
+          if (!isTransient) {
+            linkCache.set(url, result)
+            cacheResult(url, result, persistentCache)
+          } else {
+            // Store in memory only for this test run
+            linkCache.set(url, result)
+            console.warn(`⚠️  Transient error not cached: ${url} - ${errorMessage}`)
+          }
+
           return result
         }
 
