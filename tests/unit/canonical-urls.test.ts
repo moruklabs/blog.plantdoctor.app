@@ -2,16 +2,24 @@
  * Canonical URL Validation Test
  *
  * Ensures all content (tips, guides, news) has valid canonical URLs
- * following the pattern: https://blog.plantdoctor.app/{tips,guides,news}/{slug}
+ * following the pattern: {BLOG_URL}/{tips,guides,news}/{slug}
  */
 
 import { getAllPosts } from '@/lib/content/posts'
 import { getAllGuides } from '@/lib/content/guides'
 import { getAllNews } from '@/lib/content/news'
+import { blogConfig } from '@/config'
+
+// Extract base URL from config for consistent testing
+const BASE_URL = blogConfig.site.url
+
+// Helper to create URL regex pattern (escapes special regex characters)
+const urlPattern = (path: string) =>
+  new RegExp(`^${BASE_URL.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}${path}$`)
 
 describe('Canonical URLs for Content', () => {
   describe('Tips/Posts Canonical URLs', () => {
-    test('all posts should have canonical URLs starting with https://blog.plantdoctor.app/tips/', async () => {
+    test('all posts should have canonical URLs starting with ${BASE_URL}/tips/', async () => {
       const posts = await getAllPosts()
 
       expect(posts.length).toBeGreaterThan(0)
@@ -20,7 +28,7 @@ describe('Canonical URLs for Content', () => {
 
       posts.forEach((post) => {
         const canonical = post.metadata.canonical
-        const expectedPattern = /^https:\/\/blog\.plantdoctor\.app\/tips\/.+/
+        const expectedPattern = new RegExp(`^${BASE_URL.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/tips/.+`)
 
         if (!expectedPattern.test(canonical)) {
           invalidPosts.push({
@@ -36,20 +44,20 @@ describe('Canonical URLs for Content', () => {
       }
     })
 
-    test('each post canonical should match pattern https://blog.plantdoctor.app/tips/{slug}', async () => {
+    test('each post canonical should match pattern ${BASE_URL}/tips/{slug}', async () => {
       const posts = await getAllPosts()
 
       posts.forEach((post) => {
-        expect(post.metadata.canonical).toMatch(/^https:\/\/blog\.plantdoctor\.app\/tips\/.+$/)
+        expect(post.metadata.canonical).toMatch(urlPattern(`/tips/.+`))
         expect(post.metadata.canonical).toBe(
-          `https://blog.plantdoctor.app/tips/${post.metadata.slug}`,
+          `${BASE_URL}/tips/${post.metadata.slug}`,
         )
       })
     })
   })
 
   describe('Guides Canonical URLs', () => {
-    test('all guides should have canonical URLs starting with https://blog.plantdoctor.app/guides/', async () => {
+    test('all guides should have canonical URLs starting with ${BASE_URL}/guides/', async () => {
       const guides = await getAllGuides()
 
       expect(guides.length).toBeGreaterThan(0)
@@ -74,20 +82,20 @@ describe('Canonical URLs for Content', () => {
       }
     })
 
-    test('each guide canonical should match pattern https://blog.plantdoctor.app/guides/{slug}', async () => {
+    test('each guide canonical should match pattern ${BASE_URL}/guides/{slug}', async () => {
       const guides = await getAllGuides()
 
       guides.forEach((guide) => {
         expect(guide.metadata.canonical).toMatch(/^https:\/\/blog\.plantdoctor\.app\/guides\/.+$/)
         expect(guide.metadata.canonical).toBe(
-          `https://blog.plantdoctor.app/guides/${guide.metadata.slug}`,
+          `${BASE_URL}/guides/${guide.metadata.slug}`,
         )
       })
     })
   })
 
   describe('News Canonical URLs', () => {
-    test('all news articles should have canonical URLs starting with https://blog.plantdoctor.app/news/', async () => {
+    test('all news articles should have canonical URLs starting with ${BASE_URL}/news/', async () => {
       const news = await getAllNews()
 
       expect(news.length).toBeGreaterThan(0)
@@ -114,20 +122,20 @@ describe('Canonical URLs for Content', () => {
       }
     })
 
-    test('each news article canonical should match pattern https://blog.plantdoctor.app/news/{slug}', async () => {
+    test('each news article canonical should match pattern ${BASE_URL}/news/{slug}', async () => {
       const news = await getAllNews()
 
       news.forEach((article) => {
         expect(article.metadata.canonical).toMatch(/^https:\/\/blog\.plantdoctor\.app\/news\/.+$/)
         expect(article.metadata.canonical).toBe(
-          `https://blog.plantdoctor.app/news/${article.metadata.slug}`,
+          `${BASE_URL}/news/${article.metadata.slug}`,
         )
       })
     })
   })
 
   describe('All Content Canonical URLs', () => {
-    test('all content should use https://blog.plantdoctor.app domain', async () => {
+    test('all content should use ${BASE_URL} domain', async () => {
       const posts = await getAllPosts()
       const guides = await getAllGuides()
       const news = await getAllNews()
@@ -139,7 +147,7 @@ describe('Canonical URLs for Content', () => {
       ]
 
       const invalidContent = allContent.filter(
-        (item) => !item.metadata.canonical.startsWith('https://blog.plantdoctor.app/'),
+        (item) => !item.metadata.canonical.startsWith('${BASE_URL}/'),
       )
 
       if (invalidContent.length > 0) {
