@@ -16,51 +16,46 @@ const eslintConfig = [
   },
 
   // Extend Next.js configs
-  ...compat.extends('next/core-web-vitals', 'next/typescript', 'prettier'),
+  ...compat.extends('next/core-web-vitals', 'next/typescript', 'prettier'), // Global rules
+{
+  rules: {
+    // Accessibility rules for better SEO and UX
+    '@next/next/no-img-element': 'error',
+    '@next/next/no-html-link-for-pages': 'error',
 
-  // Global rules
-  {
-    rules: {
-      // Accessibility rules for better SEO and UX
-      '@next/next/no-img-element': 'error',
-      '@next/next/no-html-link-for-pages': 'error',
+    // TypeScript rules - warnings instead of errors for now
+    '@typescript-eslint/no-unused-vars': 'warn',
+    '@typescript-eslint/no-explicit-any': 'warn',
 
-      // TypeScript rules - warnings instead of errors for now
-      '@typescript-eslint/no-unused-vars': 'warn',
-      '@typescript-eslint/no-explicit-any': 'warn',
-
-      // Atomic Design enforcement - prevent imports from non-standard component folders
-      'no-restricted-imports': [
-        'error',
-        {
-          patterns: [
-            {
-              group: [
-                '@/components/!(atoms|molecules|organisms|templates|analytics|links|seo|ui)/*',
-              ],
-              message:
-                'Import from Atomic Design hierarchy (atoms/molecules/organisms/templates) or approved domain folders (analytics/links/seo/ui) only.',
-            },
-            {
-              group: ['@/components/engagement/*', '@/components/podcast/*'],
-              message:
-                'These folders have been migrated. Use @/components/organisms or @/components/molecules instead.',
-            },
-          ],
-        },
-      ],
-    },
+    // Atomic Design enforcement - prevent imports from non-standard component folders
+    'no-restricted-imports': [
+      'error',
+      {
+        patterns: [
+          {
+            group: [
+              '@/components/!(atoms|molecules|organisms|templates|analytics|links|seo|ui)/*',
+            ],
+            message:
+              'Import from Atomic Design hierarchy (atoms/molecules/organisms/templates) or approved domain folders (analytics/links/seo/ui) only.',
+          },
+          {
+            group: ['@/components/engagement/*', '@/components/podcast/*'],
+            message:
+              'These folders have been migrated. Use @/components/organisms or @/components/molecules instead.',
+          },
+        ],
+      },
+    ],
   },
-
-  // MDX-specific overrides
-  {
-    files: ['**/*.mdx'],
-    ...compat.extends('plugin:mdx/recommended')[0],
-    rules: {
-      // Relax some rules for MDX files
-      '@next/next/no-img-element': 'off',
-    },
+}, // MDX-specific overrides
+{
+  files: ['**/*.mdx'],
+  ...compat.extends('plugin:mdx/recommended')[0],
+  rules: {
+    // Relax some rules for MDX files
+    '@next/next/no-img-element': 'off',
   },
-]
+}]
 
 export default eslintConfig

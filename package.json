@@ -21,8 +21,8 @@
     "start": "pnpm stop && next start",
     "stop": "pnpm _killport 3000",
     "// ": "=== CODE QUALITY ===",
-    "lint": "next lint",
-    "lint:fix": "next lint --fix --quiet",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix --quiet .",
     "lint:actions": "./scripts/check-workflows.sh",
     "type-check": "tsc --noEmit",
     "format": "(pnpm prettify | rg -v -F '(unchanged)' || true) && pnpm lint:fix",
@@ -149,7 +149,6 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.0",
-    "@eslint/eslintrc": "^3.3.1",
     "@lhci/cli": "^0.15.1",
     "@next/bundle-analyzer": "^15.5.6",
     "@octokit/rest": "^22.0.1",
