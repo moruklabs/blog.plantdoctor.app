@@ -143,7 +143,7 @@ describe('Canonical URLs for Content', () => {
       ]
 
       const invalidContent = allContent.filter(
-        (item) => !item.metadata.canonical.startsWith('${BASE_URL}/'),
+        (item) => !item.metadata.canonical.startsWith(`${BASE_URL}/`),
       )
 
       if (invalidContent.length > 0) {
