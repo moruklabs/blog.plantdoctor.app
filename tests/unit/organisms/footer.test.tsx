@@ -77,7 +77,10 @@ describe('Footer Organism', () => {
       render(<Footer />)
       const downloadButton = screen.getByText('Download on App Store')
       expect(downloadButton).toBeInTheDocument()
-      expect(downloadButton).toHaveAttribute('href', 'https://apps.apple.com/no/app/plant-doctor-ai-disease-id/id6748545235')
+      expect(downloadButton).toHaveAttribute(
+        'href',
+        'https://apps.apple.com/no/app/plant-doctor-ai-disease-id/id6748545235',
+      )
       expect(downloadButton).toHaveClass('bg-primary')
     })
   })

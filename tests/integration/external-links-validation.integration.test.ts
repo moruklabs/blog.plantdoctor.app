@@ -80,12 +80,12 @@ const CACHE_FILE = path.join(process.cwd(), '.test-cache', 'link-validation.json
 // Transient error patterns that should NOT be cached long-term
 const TRANSIENT_ERROR_PATTERNS = [
   'abort',
-  'ENOTFOUND',     // DNS lookup failed
-  'ETIMEDOUT',     // Network timeout
-  'ECONNREFUSED',  // Connection refused
-  'ENETUNREACH',   // Network unreachable
-  'ECONNRESET',    // Connection reset
-  'fetch failed',  // Generic fetch failure
+  'ENOTFOUND', // DNS lookup failed
+  'ETIMEDOUT', // Network timeout
+  'ECONNREFUSED', // Connection refused
+  'ENETUNREACH', // Network unreachable
+  'ECONNRESET', // Connection reset
+  'fetch failed', // Generic fetch failure
   'socket hang up',
   'network timeout',
 ]
@@ -234,7 +234,6 @@ async function cacheResultSafe(
   })
   await cacheWriteQueue
 }
-
 
 describe('External Links Validation', () => {
   const allExternalLinks: ExternalLink[] = []
