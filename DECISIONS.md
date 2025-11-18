@@ -72,6 +72,154 @@ What needs to happen next?
 
 ---
 
+## ADR-011: PR Review Issues Resolution + TDD Optimization
+
+**Date:** 2025-11-19
+**Status:** ✅ Accepted
+
+### Context
+
+Three merged PRs (#13, #17, #18) had unresolved review comments from GitHub Copilot identifying critical issues:
+
+**PR #18 - Test Coverage:**
+- 4 mock-reality mismatches in footer tests
+- Tests validated wrong values (site name, organization, URLs, descriptions)
+- Provided false confidence - tests passed but validated incorrect data
+
+**PR #17 - External Links Validation:**
+- 5 cache reliability issues
+- Transient network errors cached for 7 days
+- 4xx status codes (408, 429) cached as permanent
+- Concurrent cache writes causing race conditions
+- Cache bloat from never-removed expired entries
+- Silent cache loading failures
+
+**PR #13 - Footnote Script:**
+- Placeholder URLs using example.com (not obviously broken)
+- Complex regex patterns lacking documentation
+- Generic metadata placeholders not clearly marked
+
+**Additionally:**
+- Test suite took 77 seconds (too slow for TDD workflow)
+- External-links-validation and citations-validation making network calls in unit tests
+
+### Options Considered
+
+1. **Ignore issues** - Accept technical debt, defer to later
+2. **Quick fixes only** - Address only critical test mocks
+3. **Comprehensive resolution** - Fix all issues + optimize for TDD workflow
+4. **Partial fixes** - Fix tests but defer cache improvements
+
+### Decision
+
+**Comprehensive resolution with TDD optimization** - Fix all issues in atomic commits with frequent validation.
+
+**Implementation Plan:**
+1. Fix test mocks (PR #18)
+2. Split tests for <5s TDD feedback
+3. Fix all 5 cache issues (PR #17)
+4. Improve script documentation (PR #13)
+5. Update documentation (ADR, TODO, STATUS)
+
+### Rationale
+
+**Why comprehensive:**
+- Technical debt compounds - easier to fix now
+- Test reliability critical for TDD workflow (switching to TDD per CLAUDE.md)
+- False test confidence dangerous for refactoring
+- Cache issues impact CI/CD reliability
+
+**Why optimize for TDD:**
+- CLAUDE.md specifies TDD requirement going forward
+- 77s test time prevents effective TDD (<5s target)
+- Network-calling tests belong in integration, not unit
+
+**Why atomic commits:**
+- Easy to review and revert if needed
+- Clear git history
+- Frequent validation catches regressions early
+
+### Implementation
+
+**11 atomic commits across 8 chunks:**
+
+**Chunk 1.1:** Fix test mocks (PR #18)
+- Updated 4 mock values to match actual constants
+- Fixed assertions to avoid multiple element matches
+- **Impact:** Tests now validate correct values
+
+**Chunk 2.1:** Split tests for TDD performance
+- Moved 2 network-calling tests to `tests/integration/`
+- Updated jest.config.js to exclude integration by default
+- Added scripts: `test:integration`, `test:all`
+- **Impact:** 77s → 1.5s (50x faster!)
+
+**Chunk 3.1:** Fix network error caching
+- Added TRANSIENT_ERROR_PATTERNS list
+- Created isTransientError() helper
+- Don't cache DNS failures, timeouts, connection refused
+- **Impact:** Prevents false positives from temporary network issues
+
+**Chunk 3.2:** Fix 4xx overgeneralization
+- Defined PERMANENT_4XX_CODES (400, 401, 403, 404, 405, 410)
+- Defined TRANSIENT_4XX_CODES (408, 429, 425)
+- Created isPermanent4xx() and isTransient4xx() helpers
+- **Impact:** Rate limits and timeouts no longer cached for 7 days
+
+**Chunk 3.3:** Add cache write protection
+- Implemented cacheWriteQueue for serialized writes
+- Created async cacheResultSafe() function
+- **Impact:** Eliminates data loss from concurrent modifications
+
+**Chunk 3.4:** Add cache cleanup and visibility
+- Remove expired entries on load
+- Log cache statistics (loaded, expired, total)
+- Log warnings for cache failures
+- **Impact:** Better maintenance and debugging
+
+**Chunk 4.1:** Improve footnote script documentation
+- Added "One-time migration completed" status
+- Improved placeholder marking (⚠️ NEEDS_MANUAL_FIX)
+- Use obviously invalid URLs (PLACEHOLDER-NEEDS-REAL-URL.invalid)
+- **Impact:** Prevents accidental publication of placeholders
+
+### Consequences
+
+**Positive:**
+- ✅ **TDD-ready:** Tests run in <5s (was 77s) - 50x faster
+- ✅ **Test validity:** Mocks match actual constants (no false confidence)
+- ✅ **Cache accuracy:** Transient errors handled correctly
+- ✅ **Cache reliability:** Thread-safe writes, cleanup, visibility
+- ✅ **Documentation:** Clear script status and placeholder marking
+- ✅ **11 atomic commits:** Easy to review, clear history
+- ✅ **Frequent validation:** Every chunk tested and type-checked
+
+**Negative:**
+- ❌ **Time investment:** ~2.5 hours implementation
+- ❌ **Integration tests slower:** 30-40s (but separated from TDD flow)
+- ❌ **More scripts:** Added test:integration, test:all
+
+**Neutral:**
+- Integration tests still need to run in CI (that's their purpose)
+- Cache improvements add code complexity (justified by reliability gains)
+
+### Follow-up
+
+**Completed:**
+- [x] All test mocks corrected
+- [x] TDD workflow optimized (<5s unit tests)
+- [x] All cache issues resolved
+- [x] Script documentation improved
+- [x] ADR-011 created
+
+**Remaining:**
+- [ ] Monitor cache behavior in CI
+- [ ] Consider pre-commit hooks for footnote validation
+- [ ] Update test mock validation when constants change
+- [ ] Document TDD workflow in developer guide
+
+---
+
 ## ADR-010: Centralized Configuration System - Variable Consolidation
 
 **Date:** 2025-11-16

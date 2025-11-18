@@ -1,8 +1,8 @@
 # Project Status
 
-**Last Updated:** 2025-11-18 14:30 UTC
-**Current Branch:** main
-**Last Commit:** 3d7cfd6 - refactor: Extract GuideCTA config and rename to ContentCTA
+**Last Updated:** 2025-11-18 20:45 UTC
+**Current Branch:** fix/pr-review-issues-tdd-optimization
+**Last Commit:** [pending] - docs: Add ADR-011 for PR review issues resolution
 
 ---
 
@@ -56,7 +56,65 @@ Phase 12: ⏳ Pending - Final Cleanup
 
 ## 🔥 What Just Happened
 
-**Testimonials Regeneration + CTA Refactoring (2025-11-18):**
+**PR Review Issues Resolution + TDD Optimization (2025-11-18):**
+
+**Branch:** `fix/pr-review-issues-tdd-optimization`
+
+**Comprehensive fix of 13 issues across 3 GitHub Copilot PR reviews:**
+
+1. ✅ **PR #18 - Fixed 4 mock-reality mismatches in footer tests**
+   - Updated site name: `'Plant Doctor Blog'` → `'Plant Doctor News'`
+   - Updated organization: `'Moruk Labs'` → `'Plant Doctor'`
+   - Updated URLs: `'https://moruk.com'` → `'https://moruk.ai'`
+   - Updated brand description: `'helps you grow.'` → `'AI Plant Doctor | Identify Plants, Breeds & Diseases.'`
+   - Updated App Store URL to full version
+   - Fixed assertion specificity (avoid multiple element matches)
+   - Files: tests/unit/organisms/footer.test.tsx
+
+2. ✅ **TDD Optimization - Test performance improved 50x (77s → 1.5s)**
+   - Created tests/integration/ directory
+   - Moved network-dependent tests out of unit tests:
+     - external-links-validation.test.ts → external-links-validation.integration.test.ts
+     - citations-validation.test.ts → citations-validation.integration.test.ts
+   - Updated jest.config.js to exclude integration tests by default
+   - Added test scripts: test:integration, test:all
+   - Updated validate:standard to include integration tests
+   - Files: jest.config.js, package.json
+   - **Result:** Unit tests now run in 1.5s (TDD-friendly!)
+
+3. ✅ **PR #17 - Fixed 5 cache reliability issues in external-links-validation**
+   - Added transient error detection (ENOTFOUND, ETIMEDOUT, ECONNREFUSED, etc.)
+   - Fixed 4xx overgeneralization:
+     - Permanent: 400, 401, 403, 404, 405, 410
+     - Transient: 408 (timeout), 425 (too early), 429 (rate limit)
+   - Implemented thread-safe cache writes with async queue
+   - Added cache cleanup on load (7-day TTL, removes expired entries)
+   - Added cache visibility (console.log for loaded/expired counts)
+   - Files: tests/integration/external-links-validation.integration.test.ts
+
+4. ✅ **PR #13 - Improved footnote script documentation**
+   - Added comprehensive status comment at top (one-time migration, completed 2025-11-18)
+   - Changed placeholder URLs to obviously invalid:
+     - `https://example.com` → `https://PLACEHOLDER-NEEDS-REAL-URL.invalid`
+   - Added `⚠️ NEEDS_MANUAL_FIX ⚠️` warnings to all placeholders
+   - Documented what it does, limitations, and when NOT to run
+   - Files: scripts/fix-footnotes.ts
+
+5. ✅ **Documentation - Added ADR-011**
+   - Documented entire PR review issues resolution
+   - Included context, options, decision, implementation details
+   - Listed all 11 commits across 8 chunks
+   - Documented consequences (positive: 50x faster tests; negative: time investment)
+   - Files: DECISIONS.md
+
+**Commits:** 11 atomic commits across 8 chunks
+**Files Changed:** 6 files (footer.test.tsx, jest.config.js, package.json, external-links-validation, citations-validation, fix-footnotes.ts, DECISIONS.md)
+**Test Performance:** 77 seconds → 1.5 seconds (50x improvement)
+**Status:** Documentation updates in progress, final validation pending
+
+---
+
+**Previous Work - Testimonials Regeneration + CTA Refactoring (2025-11-18):**
 
 **2 Major Tasks Completed:**
 

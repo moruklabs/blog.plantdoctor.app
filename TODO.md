@@ -1,6 +1,6 @@
 # Project TODO
 
-**Last Updated:** 2025-11-18 14:30 UTC
+**Last Updated:** 2025-11-18 20:45 UTC
 **Auto-Update:** ⚠️ MANDATORY - Update this file for EVERY task start/completion
 
 ## ⚠️ USAGE RULES
@@ -200,6 +200,24 @@
 ---
 
 ## ✅ Recently Completed (Last 5)
+
+- [x] **Fix all PR review issues + TDD optimization** (Completed: 2025-11-18)
+  - Fixed 4 mock-reality mismatches in footer tests (PR #18)
+  - Split tests into unit/integration for <5s TDD (77s → 1.5s, 50x improvement)
+  - Fixed 5 cache reliability issues in external-links-validation (PR #17):
+    - Added transient error detection (DNS, timeouts, connection refused)
+    - Fixed 4xx overgeneralization (separated 408/429 from permanent 404/410)
+    - Added thread-safe cache writes (async queue)
+    - Added cache cleanup on load (7-day TTL)
+    - Added cache visibility (console logging)
+  - Improved footnote script documentation (PR #13):
+    - Added status comment (one-time migration completed)
+    - Changed placeholders to obviously invalid (PLACEHOLDER-NEEDS-REAL-URL.invalid)
+    - Added NEEDS_MANUAL_FIX warnings
+  - Created ADR-011 documenting entire resolution
+  - 11 atomic commits across 8 chunks
+  - Branch: fix/pr-review-issues-tdd-optimization
+  - Commits: 11 commits from ec79b7b to [final commit]
 
 - [x] **Regenerate testimonials with plant-focused content** (Completed: 2025-11-18)
   - Rewrote all 6 testimonials in config/testimonials.ts (plant care success stories)
