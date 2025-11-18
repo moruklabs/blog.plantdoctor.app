@@ -185,7 +185,31 @@ function getCachedResult(url: string, cache: ValidationCache): ValidationResult 
 }
 
 /**
- * Cache a validation result
+ * Cache write queue to prevent race conditions from concurrent operations
+ */
+let cacheWriteQueue: Promise<void> = Promise.resolve()
+
+/**
+ * Cache a validation result (thread-safe with queue)
+ */
+async function cacheResultSafe(
+  url: string,
+  result: ValidationResult,
+  cache: ValidationCache,
+): Promise<void> {
+  // Serialize cache writes to prevent race conditions
+  cacheWriteQueue = cacheWriteQueue.then(async () => {
+    cache[url] = {
+      ...result,
+      timestamp: Date.now(),
+    }
+  })
+  await cacheWriteQueue
+}
+
+/**
+ * Legacy synchronous version (kept for backward compatibility)
+ * @deprecated Use cacheResultSafe instead
  */
 function cacheResult(url: string, result: ValidationResult, cache: ValidationCache): void {
   cache[url] = {
@@ -415,7 +439,7 @@ describe('External Links Validation', () => {
         // Cache successful results and truly permanent 4xx errors
         if (response.ok || isPermanent4xx(response.status)) {
           linkCache.set(url, result)
-          cacheResult(url, result, persistentCache)
+          await cacheResultSafe(url, result, persistentCache)
         } else if (isTransient4xx(response.status)) {
           // Transient 4xx: memory cache only
           linkCache.set(url, result)
@@ -441,7 +465,7 @@ describe('External Links Validation', () => {
           const isTransient = isTransientError(errorMessage)
           if (!isTransient) {
             linkCache.set(url, result)
-            cacheResult(url, result, persistentCache)
+            await cacheResultSafe(url, result, persistentCache)
           } else {
             // Store in memory only for this test run
             linkCache.set(url, result)
@@ -466,7 +490,7 @@ describe('External Links Validation', () => {
       error: lastError || 'Max retries exceeded',
     }
     linkCache.set(url, result)
-    cacheResult(url, result, persistentCache)
+    await cacheResultSafe(url, result, persistentCache)
     return result
   }
 
