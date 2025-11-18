@@ -153,9 +153,10 @@ function loadCache(): ValidationCache {
       let totalCount = 0
 
       for (const [url, entry] of Object.entries(fullCache)) {
+        const cachedEntry = entry as CachedResult
         totalCount++
-        if (now - entry.timestamp < maxAge) {
-          cleanedCache[url] = entry
+        if (now - cachedEntry.timestamp < maxAge) {
+          cleanedCache[url] = cachedEntry
         } else {
           expiredCount++
         }
