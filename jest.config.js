@@ -10,7 +10,12 @@ const createJestConfig = nextJest({
 const customJestConfig = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   testEnvironment: 'jest-environment-jsdom',
-  testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/', '<rootDir>/tests/e2e/'],
+  testPathIgnorePatterns: [
+    '<rootDir>/.next/',
+    '<rootDir>/node_modules/',
+    '<rootDir>/tests/e2e/',
+    '<rootDir>/tests/integration/', // Skip slow integration tests by default
+  ],
   transformIgnorePatterns: ['/node_modules/(?!(marked|marked-footnote)/)'],
   moduleNameMapper: {
     '^lucide-react$': '<rootDir>/tests/mocks/lucide-react.js',
