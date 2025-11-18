@@ -207,16 +207,6 @@ async function cacheResultSafe(
   await cacheWriteQueue
 }
 
-/**
- * Legacy synchronous version (kept for backward compatibility)
- * @deprecated Use cacheResultSafe instead
- */
-function cacheResult(url: string, result: ValidationResult, cache: ValidationCache): void {
-  cache[url] = {
-    ...result,
-    timestamp: Date.now(),
-  }
-}
 
 describe('External Links Validation', () => {
   const allExternalLinks: ExternalLink[] = []
