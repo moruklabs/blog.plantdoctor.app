@@ -37,6 +37,9 @@ export type {
 
 export { validateConfig, BlogConfigSchema } from './schema'
 
+// Export component configuration
+export { guideCTADefaults } from './guide-cta'
+
 // Re-export for backwards compatibility with old lib/config.ts
 // This allows gradual migration
 /* eslint-disable @typescript-eslint/no-require-imports */

@@ -11,7 +11,7 @@ import {
 import { Breadcrumbs } from '@/components/molecules/breadcrumbs'
 import { Badge } from '@/components/atoms/badge'
 import { InternalLink } from '@/components/links'
-import { GuideCTA } from '@/components/molecules/guide-cta'
+import { ContentCTA } from '@/components/molecules/content-cta'
 import { StructuredDataScript } from '@/components/seo'
 import { ArticleContent } from '@/components/molecules/article-content'
 import { ReadingModeToggle } from '@/components/molecules/reading-mode-toggle'
@@ -219,7 +219,7 @@ export default async function NewsArticlePage({ params }: { params: Promise<{ sl
 
             {/* Guide CTA */}
             <section className="mb-8">
-              <GuideCTA />
+              <ContentCTA />
             </section>
 
             {/* Share Buttons */}

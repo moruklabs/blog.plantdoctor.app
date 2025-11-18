@@ -17,11 +17,10 @@
  * - Ensures consistency between sitemap and actual routes
  *
  * ## What's included in sitemap:
- * - Static pages (/, /tips, /news, /apps, /guides, /about, /contact, etc.)
+ * - Static pages (/, /tips, /news, /guides, /about, /contact, etc.)
  * - Dynamic blog posts (/tips/[slug])
  * - Dynamic guide pages (/guides/[slug])
  * - Dynamic news articles (/news/[slug])
- * - Dynamic app pages (/apps/[slug])
  *
  * ## Expected behavior:
  * - All sitemap URLs should point to valid, accessible routes
@@ -42,7 +41,6 @@ import sitemap from '@/app/sitemap'
 import { getAllPosts } from '@/lib/content/posts'
 import { getAllGuides } from '@/lib/content/guides'
 import { getAllNews } from '@/lib/content/news'
-import { getAllApps } from '@/lib/content/apps'
 import { blogConfig } from '@/config'
 import { stat } from 'fs/promises'
 import path from 'path'
@@ -60,7 +58,6 @@ describe('Sitemap URL Validation', () => {
       '/',
       '/tips',
       '/news',
-      '/apps',
       '/guides',
       '/about',
       '/contact',
@@ -87,12 +84,6 @@ describe('Sitemap URL Validation', () => {
     const newsArticles = await getAllNews()
     newsArticles.forEach((article) => {
       allValidRoutes.add(`/news/${article.metadata.slug}`)
-    })
-
-    // Dynamic app routes
-    const apps = await getAllApps()
-    apps.forEach((app) => {
-      allValidRoutes.add(`/apps/${app.metadata.slug}`)
     })
 
     //console.log(`✓ Found ${allValidRoutes.size} valid routes in application`)
@@ -137,12 +128,6 @@ describe('Sitemap URL Validation', () => {
     if (route.startsWith('/news/')) {
       const slug = route.replace('/news/', '')
       return allValidRoutes.has(`/news/${slug}`)
-    }
-
-    // Check if it's an app route
-    if (route.startsWith('/apps/')) {
-      const slug = route.replace('/apps/', '')
-      return allValidRoutes.has(`/apps/${slug}`)
     }
 
     return false
@@ -207,7 +192,6 @@ describe('Sitemap URL Validation', () => {
       '/',
       '/tips',
       '/news',
-      '/apps',
       '/guides',
       '/about',
       '/contact',
@@ -286,41 +270,14 @@ describe('Sitemap URL Validation', () => {
     expect(missingGuides).toEqual([])
   })
 
-  test('should include all published apps in sitemap', async () => {
-    const apps = await getAllApps()
-    const sitemapData = await sitemap()
-    const sitemapPaths = sitemapData.map((entry) => urlToPath(entry.url))
-
-    const missingApps: string[] = []
-    apps.forEach((app) => {
-      const path = `/apps/${app.metadata.slug}`
-      if (!sitemapPaths.includes(path)) {
-        missingApps.push(path)
-      }
-    })
-
-    if (missingApps.length > 0) {
-      //console.error('\n❌ Missing apps in sitemap:')
-      missingApps.forEach((_path) => {
-        //console.error(`   ${path}`)
-      })
-    } else {
-      //console.log(`✓ All ${apps.length} published apps included in sitemap`)
-    }
-
-    expect(missingApps).toEqual([])
-  })
-
   test('should report sitemap statistics', async () => {
     const sitemapData = await sitemap()
     const posts = await getAllPosts()
     const guides = await getAllGuides()
     const newsArticles = await getAllNews()
-    const apps = await getAllApps()
 
-    const staticPagesCount = 11 // Known static pages (/, /tips, /news, /apps, /guides, /about, /contact, /support, /privacy-policy, /terms-and-conditions, /cookie-policy)
-    const expectedTotal =
-      staticPagesCount + posts.length + guides.length + newsArticles.length + apps.length
+    const staticPagesCount = 10 // Known static pages (/, /tips, /news, /guides, /about, /contact, /support, /privacy-policy, /terms-and-conditions, /cookie-policy)
+    const expectedTotal = staticPagesCount + posts.length + guides.length + newsArticles.length
 
     //console.log(`\n📊 Sitemap Statistics:`)
     //console.log(`   Total URLs in sitemap: ${sitemapData.length}`)

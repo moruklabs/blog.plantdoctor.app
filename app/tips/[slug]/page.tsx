@@ -12,7 +12,7 @@ import {
 import { siteConfig } from '@/lib/config'
 import { Breadcrumbs } from '@/components/molecules/breadcrumbs'
 import { Badge } from '@/components/atoms/badge'
-import { GuideCTA } from '@/components/molecules/guide-cta'
+import { ContentCTA } from '@/components/molecules/content-cta'
 import { StructuredDataScript } from '@/components/seo'
 import { ReadingModeToggle } from '@/components/molecules/reading-mode-toggle'
 import { ArticleContent } from '@/components/molecules/article-content'
@@ -203,7 +203,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
             {/* Guide CTA */}
             <section className="mb-8">
-              <GuideCTA />
+              <ContentCTA />
             </section>
 
             {/* Share Buttons */}
