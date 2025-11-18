@@ -1516,4 +1516,4 @@ git commit -m "feat: Enable TypeScript strict mode"
 **Next Milestone**: Start Phase 5 - Theme Architecture
 
 - from now on we switch to TDD, including accessibility, lighthouse, unit, integration and e2e on mobile, tablet and desktop, and on light mode and dark mode.
-- the base url is new.moruk.ai
+- the base url is news.plantdoctor.app

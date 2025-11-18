@@ -4,7 +4,6 @@ import type { MetadataRoute } from 'next'
 import { getAllPosts } from '@/lib/content/posts'
 import { getAllGuides } from '@/lib/content/guides'
 import { getAllNews } from '@/lib/content/news'
-import { getAllApps } from '@/lib/content/apps'
 import { BLOG_CONSTANTS } from '@/config/constants'
 import { getStaticPageConfigs } from '@/config/sitemap-config'
 import { featureToggles } from '@/lib/feature-toggles'
@@ -42,7 +41,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = featureToggles.tips.enabled ? await getAllPosts() : []
   const guides = featureToggles.guides.enabled ? await getAllGuides() : []
   const newsArticles = await getAllNews()
-  const apps = await getAllApps()
   const baseUrl = BLOG_CONSTANTS.BLOG_URL
 
   const staticPageConfigsBase = getStaticPageConfigs(baseUrl)
@@ -100,18 +98,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   )
 
-  // Apps - high priority for portfolio showcase
-  const appPages = await Promise.all(
-    apps.map(async (app) => ({
-      url: `${baseUrl}/apps/${app.metadata.slug}`,
-      lastModified: await getLastModifiedFromFile(
-        `content/apps/${app.metadata.slug}.mdx`,
-        safeDate(app.metadata.date),
-      ),
-      changeFrequency: 'monthly' as const,
-      priority: 0.8, // High priority for portfolio content
-    })),
-  )
-
-  return [...newsPages, ...guidePages, ...appPages, ...staticPages, ...blogPosts]
+  return [...newsPages, ...guidePages, ...staticPages, ...blogPosts]
 }

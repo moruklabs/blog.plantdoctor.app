@@ -16,7 +16,7 @@ const BASE = {
   BRAND_NAME: 'Plant Doctor',
   SITE_NAME: 'Plant Doctor News',
   AUTHOR_NAME: 'Plant Doctor Team',
-  ORGANIZATION_NAME: 'Moruk, LLC',
+  ORGANIZATION_NAME: 'Plant Doctor',
 
   // URLs and domains
   BLOG_DOMAIN: 'news.plantdoctor.app',

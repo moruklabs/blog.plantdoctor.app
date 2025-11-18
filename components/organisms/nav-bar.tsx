@@ -41,13 +41,6 @@ export function NavBar() {
       >
         {'News'}
       </Link>
-      <Link
-        href="/apps"
-        className={navItemClass}
-        aria-current={isActive('/apps') ? 'page' : undefined}
-      >
-        {'Apps'}
-      </Link>
       {featureToggles.guides.enabled && (
         <Link
           href={siteConfig.app.guides}

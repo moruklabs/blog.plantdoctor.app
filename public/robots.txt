@@ -1,4 +1,4 @@
-# Moruk News robots.txt
+# Plant Doctor News robots.txt
 User-agent: *
 Allow: /
 

@@ -42,7 +42,8 @@ interface ImportResult {
 
 const BLOG_POSTS_DIR = '/Users/fatih/workspace/blog-posts/moruk'
 const CONTENT_POSTS_DIR = '/Users/fatih/workspace/news.plantdoctor.app/content/posts'
-const PUBLIC_IMAGES_DIR = '/Users/fatih/workspace/news.plantdoctor.app/public/images/webp/blog-posts'
+const PUBLIC_IMAGES_DIR =
+  '/Users/fatih/workspace/news.plantdoctor.app/public/images/webp/blog-posts'
 
 // Ensure directories exist
 function ensureDirectories() {

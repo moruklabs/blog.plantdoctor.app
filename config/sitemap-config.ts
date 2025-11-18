@@ -21,12 +21,6 @@ export function getStaticPageConfigs(baseUrl: string) {
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/apps`,
-      filePath: 'app/apps/page.tsx',
-      changeFrequency: 'monthly' as const,
-      priority: 0.8,
-    },
-    {
       url: `${baseUrl}/guides`,
       filePath: 'app/guides/page.tsx',
       changeFrequency: 'weekly' as const,
