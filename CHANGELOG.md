@@ -16,6 +16,97 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Planned
+
+**Phase 6: Implement Themes**
+
+- Apply 4 theme variants across all components
+- Replace hardcoded colors with theme variables
+
+**Phase 7: Internationalization**
+
+- Implement next-intl for 5+ languages
+
+---
+
+## [Rebranding-Phase-10] - 2025-11-18
+
+### Changed
+
+**Testimonials (config/testimonials.ts):**
+
+- Updated Testimonial interface:
+  - Changed `platform?: string` → `location?: string` (geographic location instead of iOS/Android)
+  - Removed `appSlug?: string` (no longer linking to /apps section)
+  - Added `plantType?: string` (type of plant they care for)
+- Updated TESTIMONIALS_COPY:
+  - Title: "What Our Users Are Saying" → "Success Stories from Plant Parents"
+  - Lead: Changed from multi-app focus to pure plant care focus
+- Replaced all 6 testimonials with plant-focused success stories:
+  1. Emma Chen (35) - Fiddle Leaf Fig rescue, San Francisco CA
+  2. David Martinez (42) - Monstera indoor jungle, Austin TX
+  3. Sarah Thompson (28) - Pothos beginner success, Seattle WA
+  4. Michael Kim (39) - Succulent pest management, Phoenix AZ
+  5. Lisa Johnson (31) - Fungus gnat elimination, Portland OR
+  6. James Rodriguez (45) - Orchid growing, Miami FL
+
+**Testimonials Component (components/organisms/testimonials.tsx):**
+
+- Removed dependencies: `Link` from next/link, `getUrlForApp` from lib/content/apps
+- Simplified component structure:
+  - Removed conditional `CardWrapper` logic with Link wrapper
+  - Changed from clickable cards to static display cards
+  - Updated display: `platform` → `location` + `plantType`
+
+**CTA Configuration:**
+
+- Created config/guide-cta.ts with centralized defaults
+- Renamed GuideCTA → ContentCTA component for better semantics
+- Updated imports in app/news/[slug]/page.tsx and app/tips/[slug]/page.tsx
+- Exported from components/molecules/index.ts and config/index.ts
+
+### Fixed
+
+**Tests (tests/unit/sitemap-validation.test.ts):**
+
+- Removed `getAllApps` import (no longer needed after /apps deletion)
+- Removed `/apps` from staticRoutes array
+- Removed dynamic app routes validation section
+- Removed app route check in validation logic
+- Removed "should include all published apps in sitemap" test
+- Updated staticPagesCount from 11 to 10
+- Updated expectedTotal calculation (removed apps.length)
+
+### Technical
+
+**Rebranding Documentation:**
+
+- Updated REBRANDING_STEPS.md with Phase 10: Testimonials Regeneration
+  - Section 10.1: Problem Analysis
+  - Section 10.2: config/testimonials.ts changes
+  - Section 10.3: components/organisms/testimonials.tsx changes
+  - Section 10.4: Files changed summary
+
+**Commits:**
+
+- 6073a09 - refactor: Regenerate testimonials with plant-focused content
+- 3d7cfd6 - refactor: Extract GuideCTA config and rename to ContentCTA
+
+**Files Changed:**
+
+- config/testimonials.ts (complete rewrite of testimonials data)
+- components/organisms/testimonials.tsx (simplified, removed Link logic)
+- config/guide-cta.ts (new file, centralized CTA config)
+- components/molecules/content-cta.tsx (renamed from guide-cta.tsx)
+- app/news/[slug]/page.tsx (updated import)
+- app/tips/[slug]/page.tsx (updated import)
+- tests/unit/sitemap-validation.test.ts (removed /apps references)
+- REBRANDING_STEPS.md (added Phase 10 documentation)
+
+---
+
+## [Git-Hooks-System] - 2025-11-16
+
 ### Added
 
 **Git Hooks System (2025-11-16):**

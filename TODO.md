@@ -1,6 +1,6 @@
 # Project TODO
 
-**Last Updated:** 2025-11-16 22:50 UTC
+**Last Updated:** 2025-11-18 14:30 UTC
 **Auto-Update:** ⚠️ MANDATORY - Update this file for EVERY task start/completion
 
 ## ⚠️ USAGE RULES
@@ -200,6 +200,20 @@
 ---
 
 ## ✅ Recently Completed (Last 5)
+
+- [x] **Regenerate testimonials with plant-focused content** (Completed: 2025-11-18)
+  - Rewrote all 6 testimonials in config/testimonials.ts (plant care success stories)
+  - Updated interface: platform → location, appSlug → plantType
+  - Simplified testimonials.tsx component (removed Link wrapper logic)
+  - Updated REBRANDING_STEPS.md with Phase 10 documentation
+  - Commit: 6073a09
+
+- [x] **Extract GuideCTA config and rename to ContentCTA** (Completed: 2025-11-18)
+  - Created config/guide-cta.ts with centralized CTA defaults
+  - Renamed GuideCTA → ContentCTA for better semantics
+  - Updated imports in news/[slug]/page.tsx and tips/[slug]/page.tsx
+  - Fixed sitemap tests (removed /apps references)
+  - Commit: 3d7cfd6
 
 - [x] **Remove Conversation Mastery guide** (Completed: 2025-11-16)
   - Deleted content/guides/conversation-mastery.mdx (dating-specific guide)

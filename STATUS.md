@@ -1,8 +1,8 @@
 # Project Status
 
-**Last Updated:** 2025-11-16 22:50 UTC
-**Current Branch:** refactor/phase-7-internationalization
-**Last Commit:** 7bdfacb - feat: Create 6 strategic SEO hub guides with internal links
+**Last Updated:** 2025-11-18 14:30 UTC
+**Current Branch:** main
+**Last Commit:** 3d7cfd6 - refactor: Extract GuideCTA config and rename to ContentCTA
 
 ---
 
@@ -56,7 +56,44 @@ Phase 12: ⏳ Pending - Final Cleanup
 
 ## 🔥 What Just Happened
 
-**Hub Guides Creation + Content Organization (2025-11-16):**
+**Testimonials Regeneration + CTA Refactoring (2025-11-18):**
+
+**2 Major Tasks Completed:**
+
+1. ✅ **Regenerated all testimonials with plant-focused content** (Phase 10 of rebranding)
+   - Updated config/testimonials.ts:
+     - Changed interface: `platform` → `location`, `appSlug` → `plantType`
+     - Rewrote TESTIMONIALS_COPY title and lead to plant-focused
+     - Replaced all 6 testimonials with plant care success stories
+   - Updated components/organisms/testimonials.tsx:
+     - Removed Link import and getUrlForApp dependency
+     - Simplified component (removed conditional Link wrapper logic)
+     - Changed display: platform → location + plantType
+   - Updated REBRANDING_STEPS.md:
+     - Added Phase 10: Testimonials Regeneration section
+     - Documented problem analysis, changes, before/after code
+   - Fixed tests/unit/sitemap-validation.test.ts:
+     - Removed getAllApps import and /apps route validation
+     - Updated static page count from 11 to 10
+   - Commit: 6073a09 - "refactor: Regenerate testimonials with plant-focused content"
+
+2. ✅ **Extracted GuideCTA config and renamed to ContentCTA**
+   - Created config/guide-cta.ts with centralized CTA defaults
+   - Renamed GuideCTA component → ContentCTA for better semantics
+   - Updated imports in app/news/[slug]/page.tsx and app/tips/[slug]/page.tsx
+   - Exported from components/molecules/index.ts and config/index.ts
+   - Commit: 3d7cfd6 - "refactor: Extract GuideCTA config and rename to ContentCTA"
+
+**New Testimonials Summary:**
+
+- 6 plant-focused success stories (Emma Chen, David Martinez, Sarah Thompson, Michael Kim, Lisa Johnson, James Rodriguez)
+- Diverse plant types: fiddle leaf fig, monstera, pothos, succulents, orchids
+- Geographic diversity: 6 US cities (SF, Austin, Seattle, Phoenix, Portland, Miami)
+- Credible achievements: "Saved 12 dying plants", "50+ healthy plants", "Zero plant losses in 6 months", etc.
+
+---
+
+**Previous Work - Hub Guides Creation + Content Organization (2025-11-16):**
 
 **3 Major Tasks Completed:**
 
@@ -173,17 +210,36 @@ User clarified vision: "home page should be only made of posts like a newspaper 
 
 ## 🚀 What's Next
 
-**Choose Next Phase:**
+**Rebranding Complete - All Phases Done:**
 
-**Option A: Phase 6 - Implement Themes**
+✅ **Phase 1:** Brand Configuration (constants, favicons)
+✅ **Phase 2:** Favicon Generation
+✅ **Phase 3:** Content Structure Fixes (image paths, canonical URLs)
+✅ **Phase 4:** Guide Replacement (6 plant-focused hub guides)
+✅ **Phase 5:** Image Issues Resolution
+✅ **Phase 6:** Guide Related Content
+✅ **Phase 7:** Apps Section Removal
+✅ **Phase 8:** Test Updates
+✅ **Phase 9:** Final Validation
+✅ **Phase 10:** Testimonials Regeneration
+
+**Next Steps:**
+
+**Option A: Deploy to Production**
+
+- Push to origin/main (7 commits ahead)
+- Deploy to news.plantdoctor.app
+- Verify production build and Lighthouse scores
+
+**Option B: Continue Refactoring - Phase 6 (Implement Themes)**
 
 - Apply 4 theme variants across all components
 - Replace hardcoded colors with theme variables
 - Test theme switching on all pages
-- Fix mixed styling approach (current blocker)
+- Fix mixed styling approach (high-priority issue)
 - Estimate: 2-3 days
 
-**Option B: Phase 7 - Internationalization**
+**Option C: Continue Refactoring - Phase 7 (Internationalization)**
 
 - Implement next-intl for 5+ languages
 - Add language selector component
@@ -191,17 +247,12 @@ User clarified vision: "home page should be only made of posts like a newspaper 
 - Set up locale routing
 - Estimate: 3-4 days
 
-**Recommendation:** Start with Phase 6 (Theme Implementation) since:
-
-- Theme architecture is already in place
-- Fixes high-priority issue #5 (mixed styling)
-- Smaller scope, faster completion
-- Better foundation before i18n work
+**Recommendation:** Deploy to production first (Option A), then continue with Phase 6 or 7 based on priority.
 
 **Branch Strategy:**
 
-- Current: `refactor/phase-5-theme-architecture` (clean, all work committed)
-- Next: Create `refactor/phase-6-implement-themes` OR `refactor/phase-7-internationalization`
+- Current: `main` (clean, all rebranding work committed)
+- Next: Push to origin, or create `refactor/phase-6-implement-themes` or `refactor/phase-7-internationalization`
 
 ---
 
