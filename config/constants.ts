@@ -21,7 +21,9 @@ const BASE = {
   // URLs and domains
   BLOG_DOMAIN: 'news.plantdoctor.app',
   BLOG_URL: `https://news.plantdoctor.app`,
-  COMPANY_URL: 'https://news.plantdoctor.app',
+  COMPANY_URL: 'https://moruk.ai',
+  MORUK_URL: 'https://moruk.ai',
+  PLANT_DOCTOR_APP_URL: 'https://plantdoctor.app',
 
   // Contact information
   COMPANY_EMAIL: 'hey@plantdoctor.app',
