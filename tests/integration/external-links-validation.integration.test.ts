@@ -142,10 +142,37 @@ function loadCache(): ValidationCache {
   try {
     if (fs.existsSync(CACHE_FILE)) {
       const data = fs.readFileSync(CACHE_FILE, 'utf-8')
-      return JSON.parse(data)
+      const fullCache = JSON.parse(data)
+
+      // Clean expired entries on load
+      const now = Date.now()
+      const maxAge = CACHE_DURATION_DAYS * 24 * 60 * 60 * 1000
+      const cleanedCache: ValidationCache = {}
+
+      let expiredCount = 0
+      let totalCount = 0
+
+      for (const [url, entry] of Object.entries(fullCache)) {
+        totalCount++
+        if (now - entry.timestamp < maxAge) {
+          cleanedCache[url] = entry
+        } else {
+          expiredCount++
+        }
+      }
+
+      console.log(
+        `📦 Cache loaded: ${Object.keys(cleanedCache).length} entries (${expiredCount} expired removed, ${totalCount} total)`,
+      )
+
+      return cleanedCache
+    } else {
+      console.log('📦 No cache file found, starting fresh')
     }
   } catch (error) {
-    // Ignore cache read errors, start with fresh cache
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error'
+    console.warn(`⚠️  Failed to load cache: ${errorMsg}`)
+    console.warn('   Starting with fresh cache')
   }
   return {}
 }
