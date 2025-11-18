@@ -12,35 +12,35 @@
  * @see https://developers.google.com/search/docs/crawling-indexing/sitemaps/news-sitemap
  */
 
-import { getAllPosts } from '@/lib/content/posts'
+import { getAllNews } from '@/lib/content/news'
 import { blogConfig } from '@/config'
 
 export async function GET() {
-  const posts = await getAllPosts()
+  const newsArticles = await getAllNews()
 
   // Google News only indexes articles published within the last 2 days
   const twoDaysAgo = new Date()
   twoDaysAgo.setDate(twoDaysAgo.getDate() - 2)
 
-  const recentPosts = posts.filter((post) => {
-    const publishDate = new Date(post.metadata.date)
-    return publishDate >= twoDaysAgo && !post.metadata.draft
+  const recentNews = newsArticles.filter((article) => {
+    const publishDate = new Date(article.metadata.date)
+    return publishDate >= twoDaysAgo && !article.metadata.draft
   })
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
-${recentPosts
+${recentNews
   .map(
-    (post) => `  <url>
-    <loc>${blogConfig.site.url}/tips/${post.metadata.slug}</loc>
+    (article) => `  <url>
+    <loc>${blogConfig.site.url}/news/${article.metadata.slug}</loc>
     <news:news>
       <news:publication>
         <news:name>${blogConfig.site.name}</news:name>
         <news:language>${blogConfig.site.language}</news:language>
       </news:publication>
-      <news:publication_date>${new Date(post.metadata.date).toISOString()}</news:publication_date>
-      <news:title>${escapeXml(post.metadata.title)}</news:title>
+      <news:publication_date>${new Date(article.metadata.date).toISOString()}</news:publication_date>
+      <news:title>${escapeXml(article.metadata.title)}</news:title>
     </news:news>
   </url>`,
   )
