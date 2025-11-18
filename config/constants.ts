@@ -2,6 +2,7 @@
 // BLOG CONSTANTS (centralized metadata)
 // Break into base + derived to avoid duplication
 // ==========================================================================
+const APP_SHORT_NAME = 'plant-doctor'
 function phoneToHref(phone: string): string {
   const digits = (phone || '').replace(/\D/g, '')
   return `tel:+${digits}`
@@ -13,35 +14,37 @@ function emailToHref(email: string): string {
 
 const BASE = {
   // Brand names
+  UMBRELLA_BRAND_NAME: 'Moruk',
   BRAND_NAME: 'Plant Doctor',
   SITE_NAME: 'Plant Doctor News',
   AUTHOR_NAME: 'Plant Doctor Team',
   ORGANIZATION_NAME: 'Plant Doctor',
 
   // URLs and domains
+  LANDING_PAGE_URL: 'https://plantdoctor.app',
   BLOG_DOMAIN: 'news.plantdoctor.app',
   BLOG_URL: `https://news.plantdoctor.app`,
   COMPANY_URL: 'https://moruk.ai',
   MORUK_URL: 'https://moruk.ai',
-  PLANT_DOCTOR_APP_URL: 'https://plantdoctor.app',
+  APP_URL: 'https://plantdoctor.app',
 
   // Contact information
   COMPANY_EMAIL: 'hey@plantdoctor.app',
   COMPANY_EMAIL_HREF: emailToHref('hey@plantdoctor.app'),
 
   // Social media links
-  TWITTER_URL: 'https://moruk.link/twitter',
-  GITHUB_URL: 'https://moruk.link/github',
-  LINKEDIN_URL: 'https://moruk.link/linkedin',
-  DISCORD_URL: 'https://moruk.link/discord',
-  YOUTUBE_URL: 'https://moruk.link/youtube',
-  TIKTOK_URL: 'https://moruk.link/tiktok',
-  INSTAGRAM_URL: 'https://moruk.link/instagram',
-  FACEBOOK_URL: 'https://moruk.link/facebook',
-  TELEGRAM_URL: 'https://moruk.link/telegram',
-  PINTEREST_URL: 'https://moruk.link/pinterest',
-  REDDIT_URL: 'https://moruk.link/reddit',
-  BLUESKY_URL: 'https://moruk.link/bluesky',
+  TWITTER_URL: `https://moruk.link/${APP_SHORT_NAME}twitter`,
+  GITHUB_URL: `https://moruk.link/${APP_SHORT_NAME}github`,
+  LINKEDIN_URL: `https://moruk.link/${APP_SHORT_NAME}linkedin`,
+  DISCORD_URL: `https://moruk.link/${APP_SHORT_NAME}discord`,
+  YOUTUBE_URL: `https://moruk.link/${APP_SHORT_NAME}youtube`,
+  TIKTOK_URL: `https://moruk.link/${APP_SHORT_NAME}tiktok`,
+  INSTAGRAM_URL: `https://moruk.link/${APP_SHORT_NAME}instagram`,
+  FACEBOOK_URL: `https://moruk.link/${APP_SHORT_NAME}facebook`,
+  TELEGRAM_URL: `https://moruk.link/${APP_SHORT_NAME}telegram`,
+  PINTEREST_URL: `https://moruk.link/${APP_SHORT_NAME}pinterest`,
+  REDDIT_URL: `https://moruk.link/${APP_SHORT_NAME}reddit`,
+  BLUESKY_URL: `https://moruk.link/${APP_SHORT_NAME}bluesky`,
 
   // Site information
   SITE_TAGLINE: 'AI Plant Doctor | Identify Plants, Breeds & Diseases',

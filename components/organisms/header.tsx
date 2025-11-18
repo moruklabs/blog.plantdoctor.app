@@ -11,7 +11,7 @@ export async function Header() {
       <div className="container mx-auto px-4 sm:px-6">
         <div className="flex h-16 items-center justify-between">
           <ExternalLink
-            href={BLOG_CONSTANTS.PLANT_DOCTOR_APP_URL}
+            href={BLOG_CONSTANTS.APP_URL}
             className="flex items-center space-x-2 sm:space-x-3 min-w-0"
           >
             <div className="h-8 w-8">

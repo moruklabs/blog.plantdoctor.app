@@ -2,7 +2,8 @@ import { BLOG_CONSTANTS } from './constants'
 
 export const FOOTER_COPY = {
   brandHeading: BLOG_CONSTANTS.SITE_NAME,
-  brandDescription: 'High-signal insights and practical guides. Part of the Moruk ecosystem.',
+  brandDescription: 'AI Plant Doctor | Identify Plants, Breeds & Diseases.',
+  landingPageUrl: BLOG_CONSTANTS.LANDING_PAGE_URL,
   copyrightPrefix: 'All rights reserved.',
 } as const
 

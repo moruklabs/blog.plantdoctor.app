@@ -12,9 +12,12 @@ function FooterBrand() {
     <div>
       <h3 className="font-bold text-lg mb-4">{FOOTER_COPY.brandHeading}</h3>
       <p className="text-sm text-muted-foreground mb-4">
+        <ExternalLink href={FOOTER_COPY.landingPageUrl} className="text-primary hover:underline">
+          Plant Doctor
+        </ExternalLink>{' '}
         {FOOTER_COPY.brandDescription} Part of the{' '}
         <ExternalLink href={BLOG_CONSTANTS.MORUK_URL} className="text-primary hover:underline">
-          Moruk
+          {BLOG_CONSTANTS.UMBRELLA_BRAND_NAME}
         </ExternalLink>{' '}
         ecosystem.
       </p>
