@@ -1,6 +1,36 @@
 #!/usr/bin/env tsx
 
 /**
+ * SCRIPT STATUS: One-time migration (Completed 2025-11-18)
+ *
+ * This script fixed footnote reference issues across 121 MDX files.
+ *
+ * ⚠️  SHOULD NOT BE NEEDED FOR ONGOING MAINTENANCE
+ *
+ * If footnote issues recur, this indicates a process problem:
+ * 1. New MDX files not following footnote format
+ * 2. blog-references-validation tests not run before commit
+ * 3. Pre-commit hooks bypassed
+ *
+ * Consider: Adding footnote validation to pre-commit hooks instead of
+ * re-running this script.
+ *
+ * ---
+ *
+ * WHAT IT DOES:
+ * 1. Finds orphaned footnote citations [^1] without definitions
+ * 2. Finds orphaned footnote definitions without citations
+ * 3. Creates placeholder definitions for orphaned citations
+ * 4. Removes orphaned definitions
+ * 5. Fixes duplicate footnote numbers
+ *
+ * LIMITATIONS:
+ * - Creates placeholder URLs (marked with ⚠️ NEEDS_MANUAL_FIX)
+ * - Uses generic metadata ("Author", "Year") - NEEDS MANUAL REVIEW
+ * - Complex regex patterns may miss edge cases
+ *
+ * ---
+ *
  * Comprehensive Footnote Fixer for MDX Files
  *
  * This script fixes 4 types of footnote issues:
@@ -262,7 +292,7 @@ function fixOrphanedCitations(filePath: string): boolean {
   // Add placeholder definitions for orphaned citations
   const placeholders = orphanedCitations
     .map((num) => {
-      return `[^${num}]: Author. (Year). [Title](https://example.com). Publication.`
+      return `[^${num}]: ⚠️ NEEDS_MANUAL_FIX ⚠️ Author. (Year). [Title](https://PLACEHOLDER-NEEDS-REAL-URL.invalid). Publication.`
     })
     .join('\n\n')
 
@@ -353,7 +383,7 @@ function fixMalformedStructure(filePath: string): boolean {
       modified = true
     } else {
       // No URL found, create a template
-      newReferencesSection += `[^${num}]: Author. (Year). [${definition}](https://example.com). Publication.\n\n`
+      newReferencesSection += `[^${num}]: ⚠️ NEEDS_MANUAL_FIX ⚠️ Author. (Year). [${definition}](https://PLACEHOLDER-NEEDS-REAL-URL.invalid). Publication.\n\n`
       modified = true
     }
   })
