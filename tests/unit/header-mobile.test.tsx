@@ -118,8 +118,8 @@ describe('Header Mobile Responsiveness', () => {
     const mainContainer = container.querySelector('div[class*="flex h-16"]')
     expect(mainContainer).toBeInTheDocument()
 
-    // Check logo link exists and points to Plant Doctor app
-    const logoLink = container.querySelector('a[href="https://plantdoctor.app"]')
+    // Check logo link exists and points to homepage
+    const logoLink = container.querySelector('a[href="/"]')
     expect(logoLink).toBeInTheDocument()
   })
 })

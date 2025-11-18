@@ -103,12 +103,21 @@ export interface TestimonialsToggles {
 }
 
 /**
+ * Theme Toggle Feature Configuration
+ */
+export interface ThemeToggleToggles {
+  /** Master toggle for theme toggle functionality */
+  enabled: boolean
+}
+
+/**
  * Complete Feature Toggles Configuration
  */
 export interface FeatureToggles {
   guides: GuidesToggles
   tips: BlogToggles
   testimonials: TestimonialsToggles
+  themeToggle: ThemeToggleToggles
 }
 
 /**
@@ -152,6 +161,15 @@ export const featureToggles: FeatureToggles = {
    */
   testimonials: {
     enabled: true,
+  },
+
+  /**
+   * Theme Toggle
+   *
+   * Controls theme toggle button in header
+   */
+  themeToggle: {
+    enabled: false,
   },
 }
 

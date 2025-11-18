@@ -22,9 +22,6 @@ export function NavBar() {
       aria-label="Main navigation"
       className="flex items-center space-x-2 sm:space-x-4 md:space-x-6"
     >
-      <Link href="/" className={navItemClass} aria-current={isActive('/') ? 'page' : undefined}>
-        {'Home'}
-      </Link>
       {featureToggles.tips.enabled && (
         <Link
           href={siteConfig.app.tips}
