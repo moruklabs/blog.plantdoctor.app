@@ -28,51 +28,52 @@ const eslintConfig = [
 
   // Extend Next.js configs
   ...compat.extends('next/core-web-vitals', 'next/typescript', 'prettier'), // Global rules
-{
-  rules: {
-    // Accessibility rules for better SEO and UX
-    '@next/next/no-img-element': 'error',
-    '@next/next/no-html-link-for-pages': 'error',
+  {
+    rules: {
+      // Accessibility rules for better SEO and UX
+      '@next/next/no-img-element': 'error',
+      '@next/next/no-html-link-for-pages': 'error',
 
-    // TypeScript rules - warnings instead of errors for now
-    '@typescript-eslint/no-unused-vars': 'warn',
-    '@typescript-eslint/no-explicit-any': 'warn',
+      // TypeScript rules - warnings instead of errors for now
+      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/no-explicit-any': 'warn',
 
-    // React Hooks rules - disabled temporarily (Phase 10: fix and re-enable)
-    // See VALIDATE-ANALYSIS.md for details on 113 errors introduced by react-hooks@7.0.1
-    'react-hooks/error-boundaries': 'off',  // TODO: Fix JSX in try/catch blocks
-    'react-hooks/set-state-in-effect': 'off',  // TODO: Fix table-of-contents.tsx
-    'react-hooks/refs': 'off',  // TODO: Fix button.tsx ref handling
+      // React Hooks rules - disabled temporarily (Phase 10: fix and re-enable)
+      // See VALIDATE-ANALYSIS.md for details on 113 errors introduced by react-hooks@7.0.1
+      'react-hooks/error-boundaries': 'off', // TODO: Fix JSX in try/catch blocks
+      'react-hooks/set-state-in-effect': 'off', // TODO: Fix table-of-contents.tsx
+      'react-hooks/refs': 'off', // TODO: Fix button.tsx ref handling
 
-    // Atomic Design enforcement - prevent imports from non-standard component folders
-    'no-restricted-imports': [
-      'error',
-      {
-        patterns: [
-          {
-            group: [
-              '@/components/!(atoms|molecules|organisms|templates|analytics|links|seo|ui)/*',
-            ],
-            message:
-              'Import from Atomic Design hierarchy (atoms/molecules/organisms/templates) or approved domain folders (analytics/links/seo/ui) only.',
-          },
-          {
-            group: ['@/components/engagement/*', '@/components/podcast/*'],
-            message:
-              'These folders have been migrated. Use @/components/organisms or @/components/molecules instead.',
-          },
-        ],
-      },
-    ],
+      // Atomic Design enforcement - prevent imports from non-standard component folders
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: [
+                '@/components/!(atoms|molecules|organisms|templates|analytics|links|seo|ui)/*',
+              ],
+              message:
+                'Import from Atomic Design hierarchy (atoms/molecules/organisms/templates) or approved domain folders (analytics/links/seo/ui) only.',
+            },
+            {
+              group: ['@/components/engagement/*', '@/components/podcast/*'],
+              message:
+                'These folders have been migrated. Use @/components/organisms or @/components/molecules instead.',
+            },
+          ],
+        },
+      ],
+    },
+  }, // MDX-specific overrides
+  {
+    files: ['**/*.mdx'],
+    ...compat.extends('plugin:mdx/recommended')[0],
+    rules: {
+      // Relax some rules for MDX files
+      '@next/next/no-img-element': 'off',
+    },
   },
-}, // MDX-specific overrides
-{
-  files: ['**/*.mdx'],
-  ...compat.extends('plugin:mdx/recommended')[0],
-  rules: {
-    // Relax some rules for MDX files
-    '@next/next/no-img-element': 'off',
-  },
-}]
+]
 
 export default eslintConfig

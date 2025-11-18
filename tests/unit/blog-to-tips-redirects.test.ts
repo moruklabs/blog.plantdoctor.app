@@ -10,10 +10,7 @@ import path from 'path'
 describe('Blog to Tips URL Redirects', () => {
   it('should have redirects defined in middleware for /blog paths', () => {
     // Read middleware file and check for redirects
-    const middlewareContent = fs.readFileSync(
-      path.join(process.cwd(), 'middleware.ts'),
-      'utf-8',
-    )
+    const middlewareContent = fs.readFileSync(path.join(process.cwd(), 'middleware.ts'), 'utf-8')
 
     // Verify blog to tips redirects exist
     expect(middlewareContent).toContain('/blog')
@@ -23,10 +20,7 @@ describe('Blog to Tips URL Redirects', () => {
   })
 
   it('should use 301 permanent redirects for SEO', () => {
-    const middlewareContent = fs.readFileSync(
-      path.join(process.cwd(), 'middleware.ts'),
-      'utf-8',
-    )
+    const middlewareContent = fs.readFileSync(path.join(process.cwd(), 'middleware.ts'), 'utf-8')
 
     // Verify 301 redirect status code is used
     // The middleware should return NextResponse.redirect(..., 301)
@@ -35,10 +29,7 @@ describe('Blog to Tips URL Redirects', () => {
   })
 
   it('should redirect /blog to /tips exactly', () => {
-    const middlewareContent = fs.readFileSync(
-      path.join(process.cwd(), 'middleware.ts'),
-      'utf-8',
-    )
+    const middlewareContent = fs.readFileSync(path.join(process.cwd(), 'middleware.ts'), 'utf-8')
 
     // Check for exact /blog to /tips redirect logic
     expect(middlewareContent).toContain("pathname === '/blog'")
@@ -46,10 +37,7 @@ describe('Blog to Tips URL Redirects', () => {
   })
 
   it('should redirect /blog/* to /tips/* pattern', () => {
-    const middlewareContent = fs.readFileSync(
-      path.join(process.cwd(), 'middleware.ts'),
-      'utf-8',
-    )
+    const middlewareContent = fs.readFileSync(path.join(process.cwd(), 'middleware.ts'), 'utf-8')
 
     // Check for wildcard /blog/* to /tips/* redirect logic
     expect(middlewareContent).toContain("pathname.startsWith('/blog/')")
@@ -59,10 +47,7 @@ describe('Blog to Tips URL Redirects', () => {
   it('should maintain query parameters and hashes in redirects', () => {
     // This is implicit in the middleware implementation
     // When creating new URL with pathname.replace, query params are preserved
-    const middlewareContent = fs.readFileSync(
-      path.join(process.cwd(), 'middleware.ts'),
-      'utf-8',
-    )
+    const middlewareContent = fs.readFileSync(path.join(process.cwd(), 'middleware.ts'), 'utf-8')
 
     // The middleware uses new URL() which preserves query params
     expect(middlewareContent).toContain('new URL(')

@@ -28,7 +28,9 @@ describe('Canonical URLs for Content', () => {
 
       posts.forEach((post) => {
         const canonical = post.metadata.canonical
-        const expectedPattern = new RegExp(`^${BASE_URL.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/tips/.+`)
+        const expectedPattern = new RegExp(
+          `^${BASE_URL.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/tips/.+`,
+        )
 
         if (!expectedPattern.test(canonical)) {
           invalidPosts.push({
@@ -49,9 +51,7 @@ describe('Canonical URLs for Content', () => {
 
       posts.forEach((post) => {
         expect(post.metadata.canonical).toMatch(urlPattern(`/tips/.+`))
-        expect(post.metadata.canonical).toBe(
-          `${BASE_URL}/tips/${post.metadata.slug}`,
-        )
+        expect(post.metadata.canonical).toBe(`${BASE_URL}/tips/${post.metadata.slug}`)
       })
     })
   })
@@ -87,9 +87,7 @@ describe('Canonical URLs for Content', () => {
 
       guides.forEach((guide) => {
         expect(guide.metadata.canonical).toMatch(/^https:\/\/blog\.plantdoctor\.app\/guides\/.+$/)
-        expect(guide.metadata.canonical).toBe(
-          `${BASE_URL}/guides/${guide.metadata.slug}`,
-        )
+        expect(guide.metadata.canonical).toBe(`${BASE_URL}/guides/${guide.metadata.slug}`)
       })
     })
   })
@@ -127,9 +125,7 @@ describe('Canonical URLs for Content', () => {
 
       news.forEach((article) => {
         expect(article.metadata.canonical).toMatch(/^https:\/\/blog\.plantdoctor\.app\/news\/.+$/)
-        expect(article.metadata.canonical).toBe(
-          `${BASE_URL}/news/${article.metadata.slug}`,
-        )
+        expect(article.metadata.canonical).toBe(`${BASE_URL}/news/${article.metadata.slug}`)
       })
     })
   })

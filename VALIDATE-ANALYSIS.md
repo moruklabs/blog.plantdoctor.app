@@ -11,6 +11,7 @@
 `pnpm validate` was failing due to **ESLint plugin resolution issues** and **113 ESLint errors** introduced by incompatible plugin versions. Additionally, the `package.json` script architecture has **significant inefficiencies** including duplicate work and confusing dependencies.
 
 **Root Causes Identified:**
+
 1. ✅ **FIXED:** Missing direct dependency on `eslint-plugin-react-hooks`
 2. 🔴 **BLOCKING:** 113 ESLint errors from stricter `react-hooks` rules (v7.0.1 vs v5.2.0)
 3. 🟡 **INEFFICIENT:** `pnpm validate` runs build twice, lint/type-check twice
@@ -54,65 +55,73 @@ pnpm add -D eslint-plugin-react-hooks
 ```
 
 **Build fails with:**
+
 ```
  ELIFECYCLE  Command failed with exit code 1.
 ```
 
 ### Error Categories
 
-| Rule | Count | Severity | Files Affected |
-|------|-------|----------|----------------|
-| `react-hooks/error-boundaries` | ~100 | Error | `app/guides/[slug]/page.tsx`, `app/tips/[slug]/page.tsx` |
-| `react-hooks/set-state-in-effect` | 1 | Error | `components/molecules/table-of-contents.tsx` |
-| `react-hooks/refs` | 1 | Error | `components/ui/button.tsx` |
-| `@typescript-eslint/no-unused-vars` | ~40 | Warning | Various test files |
-| `@typescript-eslint/no-explicit-any` | ~15 | Warning | Various test files |
+| Rule                                 | Count | Severity | Files Affected                                           |
+| ------------------------------------ | ----- | -------- | -------------------------------------------------------- |
+| `react-hooks/error-boundaries`       | ~100  | Error    | `app/guides/[slug]/page.tsx`, `app/tips/[slug]/page.tsx` |
+| `react-hooks/set-state-in-effect`    | 1     | Error    | `components/molecules/table-of-contents.tsx`             |
+| `react-hooks/refs`                   | 1     | Error    | `components/ui/button.tsx`                               |
+| `@typescript-eslint/no-unused-vars`  | ~40   | Warning  | Various test files                                       |
+| `@typescript-eslint/no-explicit-any` | ~15   | Warning  | Various test files                                       |
 
 ### Why This Happened
 
 **Version Conflict:**
+
 - **Before:** `eslint-plugin-react-hooks@5.2.0` (transitive, permissive)
 - **After:** `eslint-plugin-react-hooks@7.0.1` (direct, strict)
 
 **New Strict Rules in v7.0.1:**
 
 1. **`error-boundaries`** - Detects JSX in try/catch blocks (anti-pattern)
+
    ```tsx
    // ❌ ERROR: JSX in try/catch
    try {
      const post = await getPost(slug)
-     return <div>{post.title}</div>  // React won't catch errors here!
+     return <div>{post.title}</div> // React won't catch errors here!
    } catch {
      notFound()
    }
    ```
 
 2. **`set-state-in-effect`** - Prevents setState in useEffect without deps
+
    ```tsx
    // ❌ ERROR: Cascading renders
    useEffect(() => {
-     setToc(items)  // Should use dependency array or move to callback
+     setToc(items) // Should use dependency array or move to callback
    })
    ```
 
 3. **`refs`** - Prevents accessing ref.current during render
    ```tsx
    // ❌ ERROR: Refs during render
-   return React.cloneElement(child, { ref })  // Can cause unexpected behavior
+   return React.cloneElement(child, { ref }) // Can cause unexpected behavior
    ```
 
 ### Options to Resolve
 
 #### Option A: Downgrade Plugin (QUICK FIX)
+
 ```bash
 pnpm add -D eslint-plugin-react-hooks@5.2.0
 ```
+
 **Pros:** Immediate build fix, matches previous behavior
 **Cons:** Ignores legitimate anti-patterns, defers technical debt
 **Time:** 2 minutes
 
 #### Option B: Fix All Errors (PROPER FIX)
+
 Refactor 113 errors across multiple files:
+
 - Wrap components in Error Boundaries
 - Refactor try/catch blocks to use Error Boundaries
 - Fix table-of-contents.tsx useEffect
@@ -123,6 +132,7 @@ Refactor 113 errors across multiple files:
 **Time:** 4-6 hours
 
 #### Option C: Disable Rules Temporarily (BALANCED)
+
 ```js
 // eslint.config.mjs
 {
@@ -133,6 +143,7 @@ Refactor 113 errors across multiple files:
   }
 }
 ```
+
 **Pros:** Build unblocked, errors visible as warnings, incremental fixes possible
 **Cons:** Technical debt visible but not enforced
 **Time:** 5 minutes
@@ -163,22 +174,26 @@ graph TD
 ### Problems Identified
 
 #### 1. **Build Runs TWICE** ⚠️
+
 - Line 75: `"validate": "pnpm build && pnpm validate:complete"`
 - Line 92: `"validate:standard": "pnpm validate:quick && pnpm build && pnpm test:coverage"`
 
 **Impact:** 2x build time (~30-60 seconds wasted)
 
 #### 2. **Lint + Type-check Run TWICE** ⚠️
+
 - `prevalidate` (line 76): Runs `lint` + `type-check`
 - `validate:quick` (line 91): Runs `lint` + `type-check` + `prettier`
 
 **Impact:** 2x type-checking (~10-20 seconds wasted)
 
 #### 3. **Confusing Dependencies** ⚠️
+
 - `validate` → `build` → `validate:complete` → `validate:standard` → `build` (AGAIN!)
 - Hard to understand execution order without deep analysis
 
 #### 4. **Missing Script Documentation** ⚠️
+
 - No comments explaining when to use `validate` vs `validate:standard` vs `validate:complete`
 - Unclear which script to use for daily development
 
@@ -204,6 +219,7 @@ graph TD
 ```
 
 **Changes:**
+
 1. ✅ Remove `prevalidate` (eliminates duplicate lint/type-check)
 2. ✅ Integrate `check:pm` into `validate:quick` (cleaner)
 3. ✅ Remove duplicate `build` from `validate` (runs once in `validate:standard`)
@@ -211,6 +227,7 @@ graph TD
 5. ✅ Make `validate` alias to `validate:standard` (matches user expectations)
 
 **Benefits:**
+
 - ⚡ **40-50% faster** validation (eliminates duplicates)
 - 📖 **Clearer intent** with inline documentation
 - 🎯 **Better developer UX** - obvious which script to use
@@ -221,24 +238,28 @@ graph TD
 ## Additional Script Improvements
 
 ### 1. Add Build Cache Management
+
 ```json
 "build:clean": "rm -rf .next && pnpm build",
 "build:fresh": "pnpm cache:clean && pnpm build"
 ```
 
 ### 2. Add Fast Validation for TDD
+
 ```json
 "validate:fast": "pnpm lint:fix && pnpm type-check",
 "tdd:validate": "nodemon --exec 'pnpm validate:fast' --ext ts,tsx --watch app --watch components --watch lib"
 ```
 
 ### 3. Consolidate E2E Commands
+
 ```json
 "e2e:all": "pnpm concurrently \"pnpm e2e:desktop\" \"pnpm e2e:mobile\" \"pnpm e2e:tablet\"",
 "e2e:all:headed": "pnpm concurrently \"pnpm e2e:desktop:headed\" \"pnpm e2e:mobile:headed\" \"pnpm e2e:tablet:headed\""
 ```
 
 ### 4. Add Validation Health Check
+
 ```json
 "health": "pnpm check:pm && pnpm type-check && pnpm lint --max-warnings=0 && pnpm test --passWithNoTests",
 "health:watch": "nodemon --exec 'pnpm health' --ext ts,tsx --watch app --watch components"
@@ -248,20 +269,21 @@ graph TD
 
 ## Comparison: Before vs After
 
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| **Build Count** | 2 | 1 | 50% faster |
-| **Lint Count** | 2 | 1 | 50% faster |
-| **Type-check Count** | 2 | 1 | 50% faster |
-| **Total Validation Time** | ~3-4 min | ~2-2.5 min | 33-40% faster |
-| **Script Clarity** | Low | High | Better DX |
-| **Maintainability** | Medium | High | Easier to update |
+| Metric                    | Before   | After      | Improvement      |
+| ------------------------- | -------- | ---------- | ---------------- |
+| **Build Count**           | 2        | 1          | 50% faster       |
+| **Lint Count**            | 2        | 1          | 50% faster       |
+| **Type-check Count**      | 2        | 1          | 50% faster       |
+| **Total Validation Time** | ~3-4 min | ~2-2.5 min | 33-40% faster    |
+| **Script Clarity**        | Low      | High       | Better DX        |
+| **Maintainability**       | Medium   | High       | Easier to update |
 
 ---
 
 ## Recommended Action Plan
 
 ### Phase 1: Unblock Build (5 minutes)
+
 ```bash
 # Option C: Downgrade strict rules to warnings
 # Edit eslint.config.mjs, add to global rules:
@@ -278,6 +300,7 @@ pnpm build  # Should succeed
 ```
 
 ### Phase 2: Optimize Scripts (15 minutes)
+
 ```bash
 # Update package.json with recommended changes
 # Test all validation levels:
@@ -287,6 +310,7 @@ pnpm validate:complete   # Should run all checks
 ```
 
 ### Phase 3: Document Technical Debt (10 minutes)
+
 ```bash
 # Add to TODO.md:
 - [ ] Fix 113 react-hooks ESLint errors (Phase 10)
@@ -296,6 +320,7 @@ pnpm validate:complete   # Should run all checks
 ```
 
 ### Phase 4: Fix Incrementally (Phase 10)
+
 - Refactor try/catch to use Error Boundaries
 - Fix table-of-contents.tsx useEffect
 - Fix button.tsx ref handling
@@ -315,16 +340,19 @@ pnpm validate:complete   # Should run all checks
 ## Conclusion
 
 **Root Cause of `pnpm validate` Failure:**
+
 1. ✅ **FIXED:** ESLint plugin not found (missing direct dependency)
 2. 🔴 **BLOCKING:** 113 ESLint errors from stricter react-hooks plugin
 3. 🟡 **INEFFICIENT:** Duplicate work in validation pipeline
 
 **Recommended Approach:**
+
 1. **Immediate:** Downgrade strict rules to warnings (unblock build)
 2. **Short-term:** Optimize package.json scripts (eliminate duplicates)
 3. **Long-term:** Fix ESLint errors in Phase 10 (Testing Suite)
 
 **Impact:**
+
 - ⚡ **40-50% faster** validation pipeline
 - 🏗️ **Build unblocked** with warnings visible
 - 📝 **Technical debt documented** and planned
@@ -333,6 +361,7 @@ pnpm validate:complete   # Should run all checks
 ---
 
 **Next Steps:**
+
 1. Review this analysis with team
 2. Decide on rule downgrade approach (Option A/B/C)
 3. Implement recommended script optimizations
